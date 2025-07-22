@@ -89,10 +89,14 @@ NBRADEF size_t nibransDecode(struct nibrans*, unsigned char*, size_t, const unsi
         }
     #endif
 #endif
-#ifdef __cplusplus
-    #define NBRA_ALIGN16(A) A alignas(16)
+#if defined(__STDC_VERSION__) && __STDC_VERSION__ >= 201112
+#define NBRA_ALIGN16(A) _Alignas(16) A
 #else
-    #define NBRA_ALIGN16(A) alignas(16) A
+#ifdef _MSC_VER
+#define NBRA_ALIGN16(A) __declspec(align(16)) A
+#else
+#define NBRA_ALIGN16(A) A __attribute__((aligned(16)))
+#endif
 #endif
 #define NBRA_MIXIN(I, J) (J+1) + ((I < (J+1)) ? NBRA_PROB_SIZE - 16 : 0)
 #define NBRA_MIXIN_I(I) \
